@@ -1,6 +1,6 @@
 #!/bin/bash
 
-cd /home/blank/web/osuTime
+cd /home/blank/spoti-vote
 
 echo "Pulling from Master"
 
@@ -10,10 +10,10 @@ echo "Pulled successfully from master"
 
 echo "Installing dependencies..."
 
-npm run install-all
+npm install
 
 echo "Restarting server..."
 
-npm run build
+npm run deploy-backend
 
 echo "Server restarted Successfully"
