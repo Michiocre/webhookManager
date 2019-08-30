@@ -31,6 +31,7 @@ app.use(function (req, res, next) {
 app.use(bodyParser.json());
 
 app.post('/osuTime', function (req, res) {
+    res.send('osuTime');
     var sender = req.body.sender;
     var branch = req.body.ref;
     if(branch === 'refs/heads/master' && sender.login === 'Michiocre'){
@@ -39,6 +40,7 @@ app.post('/osuTime', function (req, res) {
 });
 
 app.post('/spoti-vote/backend', function (req, res) {
+    res.send('spoti-vote');
     var sender = req.body.sender;
     var branch = req.body.ref;
     if(branch === 'refs/heads/master' && sender.login === 'Michiocre'){
