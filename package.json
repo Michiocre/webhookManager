@@ -1,0 +1,25 @@
+{
+    "name": "webhookmanager",
+    "version": "1.0.0",
+    "description": "Yeet",
+    "main": "server.js",
+    "homepage": ".",
+    "scripts": {
+        "start": "nodemon server.js"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/Michiocre/osuTime.git"
+    },
+    "author": "Michiocre",
+    "license": "Yeet",
+    "bugs": {
+        "url": "https://github.com/Michiocre/osuTime/issues"
+    },
+    "dependencies": {
+        "body-parser": "^1.19.0",
+        "child_process": "^1.0.2",
+        "dotenv": "^8.1.0",
+        "express": "^4.17.1"
+    }
+}
