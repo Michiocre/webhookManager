@@ -1,12 +1,9 @@
 const express = require('express');
 const app = express();
-const childProcess = require('child_process');
+const exec = require('child_process').exec;
 const bodyParser = require('body-parser');
-const dotenv = require('dotenv');
-
-dotenv.config();
-
-let port = process.env.port;
+let crypto = require('crypto');
+const result = require('dotenv').config().parsed;
 
 // Add headers
 app.use(function (req, res, next) {
@@ -30,24 +27,55 @@ app.use(function (req, res, next) {
 
 app.use(bodyParser.json());
 
-app.post('/osuTime', function (req, res) {
-    res.send('osuTime');
-    var sender = req.body.sender;
-    var branch = req.body.ref;
-    if(branch === 'refs/heads/master' && sender.login === 'Michiocre'){
-        console.log(res);
+app.get('/webhookManager', function (req, res) {
+    res.send('Greeting');
+});
+
+app.post('/webhookManager/osuTime', function (req, res) {
+    const payload = JSON.stringify(req.body);
+    let sig = 'sha1=' + crypto.createHmac('sha1', result.OSUTIMESECRET).update(payload).digest('hex');
+
+    if (req.headers['x-hub-signature'] == sig) {
+        var sender = req.body.sender;
+        var branch = req.body.ref;
+        if(branch === 'refs/heads/master' && sender.login === 'Michiocre'){
+            res.sendStatus(200);
+            exec(' ./osuTime.sh', function(err){
+                if (err) {
+                    console.error(err);
+                    return res.sendStatus(500);
+                }
+            });
+        }
+    } else {
+        console.log(result.OSUTIMESECRET);
+        console.log(sig);
+        console.log(req.headers['x-hub-signature']);
+        return res.sendStatus(403);
     }
 });
 
-app.post('/spoti-vote/backend', function (req, res) {
-    res.send('spoti-vote');
-    var sender = req.body.sender;
-    var branch = req.body.ref;
-    if(branch === 'refs/heads/master' && sender.login === 'Michiocre'){
-        console.log(res);
+app.post('/webhookManager/spoti-vote/backend', function (req, res) {
+    const payload = JSON.stringify(req.body);
+    let sig = 'sha1=' + crypto.createHmac('sha1', result.SPOTIVOTESECRET).update(payload).digest('hex');
+
+    if (req.headers['x-hub-signature'] == sig) {
+        var sender = req.body.sender;
+        var branch = req.body.ref;
+        if(branch === 'refs/heads/master' && (sender.login === 'Michiocre' || sender.login === 'Gabsii')){
+            res.sendStatus(200);
+            exec(' ./spoti-vote.sh', function(err){
+                if (err) {
+                    console.error(err);
+                    return res.sendStatus(500);
+                }
+            });
+        }
+    } else {
+        return res.sendStatus(403);
     }
 });
 
-app.listen(port, () => {
-    console.log('Webhook Manger is running on Port: ' + port + '!');
+app.listen(result.PORT, () => {
+    console.log('Webhook Manger is running on Port: ' + result.PORT + '!');
 });
