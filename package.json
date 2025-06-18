@@ -5,23 +5,20 @@
     "main": "server.js",
     "homepage": ".",
     "scripts": {
-        "start": "nodemon server.js",
-        "deploy": "pm2 delete webhookManager; pm2 start server.js --name \"webhookManager\""
+        "start": "node server.js",
+        "dev": "nodemon server.js"
     },
     "repository": {
         "type": "git",
-        "url": "git+https://github.com/Michiocre/osuTime.git"
+        "url": "git+https://github.com/Michiocre/webhookmanager.git"
     },
     "author": "Michiocre",
     "license": "Yeet",
     "bugs": {
-        "url": "https://github.com/Michiocre/osuTime/issues"
+        "url": "https://github.com/Michiocre/webhookmanager/issues"
     },
     "dependencies": {
-        "body-parser": "^1.19.0",
-        "child_process": "^1.0.2",
-        "crypto": "^1.0.1",
-        "dotenv": "^8.1.0",
-        "express": "^4.17.1"
+        "dotenv": "^16.5.0",
+        "express": "^5.1.0"
     }
 }
