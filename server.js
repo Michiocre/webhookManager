@@ -18,17 +18,20 @@ app.post('/:service', express.json({type: 'application/json'}), async (req, res)
             var branch = req.body.ref;
             
             if(branch === 'refs/heads/master' || branch === 'refs/heads/main'){
-                res.sendStatus(200);
                 exec(`/home/blank/webhookManager/${req.params.service}.sh`, function(err){
                     if (err) {
                         console.error(err);
                         return res.sendStatus(500);
+                    } else {
+                        return res.status(202).send('Accepted');
                     }
                 });
+            } else {
+                return res.status(202).send('Accepted');
             }
+        } else {
+            return res.status(202).send('Accepted');
         }
-
-        return res.status(202).send('Accepted');
     } else {
         return res.sendStatus(403);
     }
