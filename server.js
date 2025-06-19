@@ -9,27 +9,26 @@ app.get('/', function (req, res) {
 });
 
 app.post('/:service', express.json({type: 'application/json'}), (req, res) => {
-    console.log(req.params);
-    console.log(req.body);
     const payload = JSON.stringify(req.body);
     let sig = 'sha1=' + createHmac('sha1', process.env.SECRET).update(payload).digest('hex');
 
-    if (req.headers['x-hub-signature'] == sig) {
-        var sender = req.body.sender;
-        var branch = req.body.ref;
-        if(branch === 'refs/heads/master' && sender.login === 'Michiocre'){
-            res.sendStatus(200);
-            exec(`./${req.params.service}.sh`, function(err){
-                if (err) {
-                    console.error(err);
-                    return res.sendStatus(500);
-                }
-            });
+    if (req.headers['X-Hub-Signature'] == sig) {
+        if (req.headers['X-GitHub-Event'] == 'push') {
+            var branch = req.body.ref;
+            
+            if(branch === 'refs/heads/master'){
+                res.sendStatus(200);
+                exec(`./${req.params.service}.sh`, function(err){
+                    if (err) {
+                        console.error(err);
+                        return res.sendStatus(500);
+                    }
+                });
+            }
         }
+
+        return response.status(202).send('Accepted');
     } else {
-        console.log(process.env.SECRET);
-        console.log(sig);
-        console.log(req.headers['x-hub-signature']);
         return res.sendStatus(403);
     }
 });
