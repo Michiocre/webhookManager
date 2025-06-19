@@ -16,7 +16,7 @@ app.post('/:service', express.json({type: 'application/json'}), (req, res) => {
         if (req.headers['X-GitHub-Event'] == 'push') {
             var branch = req.body.ref;
             
-            if(branch === 'refs/heads/master'){
+            if(branch === 'refs/heads/master' || branch === 'refs/heads/main'){
                 res.sendStatus(200);
                 exec(`./${req.params.service}.sh`, function(err){
                     if (err) {
