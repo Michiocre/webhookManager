@@ -19,7 +19,7 @@ app.post('/:service', express.json({type: 'application/json'}), async (req, res)
             
             if(branch === 'refs/heads/master' || branch === 'refs/heads/main'){
                 res.sendStatus(200);
-                exec(`./${req.params.service}.sh`, function(err){
+                exec(`/home/blank/webhookManager/${req.params.service}.sh`, function(err){
                     if (err) {
                         console.error(err);
                         return res.sendStatus(500);
